@@ -51,11 +51,6 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.multiverse</groupId>
-            <artifactId>multiverse-core</artifactId>
-            <version>0.6.1</version>
-        </dependency>
         <!-- TEST DEPENDENCIES -->
         <dependency>
             <groupId>se.scalablesolutions.akka</groupId>
@@ -79,6 +74,12 @@
             <groupId>org.scala-tools.testing</groupId>
             <artifactId>scalatest</artifactId>
             <version>0.9.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.multiverse</groupId>
+            <artifactId>multiverse-core</artifactId>
+            <version>0.6.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

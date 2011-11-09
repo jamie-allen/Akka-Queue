@@ -4,8 +4,6 @@ import akka.actor._
 import akka.config.Supervision.{AllForOneStrategy, Permanent, SupervisorConfig, Supervise}
 import com.weiglewilczek.slf4s.Logging
 import impl._
-import org.multiverse.api.latches.StandardLatch
-import java.util.concurrent.TimeUnit
 
 object ErrorKernel {
   sealed trait ApplicationManagementMessage
@@ -19,12 +17,10 @@ object ErrorKernel {
   }
 
   class Consumer extends JamieActor with Logging {
-    val timingLatch = new StandardLatch
-
     def receive = {
       case (TakeNextFromQueue) =>
         logger.debug("Received TakeNextFromQueue")
-        timingLatch.tryAwait(250, TimeUnit.MILLISECONDS)
+        (1 to 1000000).map(_ + 1) // do something so the actor doesn't just spin
         self ! TakeNextFromQueue
     }
 
@@ -35,13 +31,10 @@ object ErrorKernel {
   }
 
   class Producer extends JamieActor with Logging {
-    self.receiveTimeout = Some(15000)
-    val timingLatch = new StandardLatch
-
     def receive = {
       case (GetUpdates) =>
         logger.debug("Recieved GetUpdates")
-        timingLatch.tryAwait(250, TimeUnit.MILLISECONDS)
+        (1 to 1000000).map(_ + 1) // do something so the actor doesn't just spin
         self ! GetUpdates
     }
 
