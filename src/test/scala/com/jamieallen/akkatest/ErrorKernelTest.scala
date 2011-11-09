@@ -37,6 +37,7 @@ class ErrorKernelTest extends JUnitSuite {
 
     assert(producer.isRunning)
     assert(consumer.isRunning)
+    Actor.registry.shutdownAll()
   }
 
   @Test
@@ -56,5 +57,6 @@ class ErrorKernelTest extends JUnitSuite {
 
     assert(producer.isShutdown)
     assert(consumer.isShutdown)
+    Actor.registry.shutdownAll()
   }
 }
