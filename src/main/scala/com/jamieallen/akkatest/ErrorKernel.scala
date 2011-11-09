@@ -3,12 +3,17 @@ package com.jamieallen.akkatest
 import akka.actor._
 import akka.config.Supervision.{AllForOneStrategy, Permanent, SupervisorConfig, Supervise}
 import com.weiglewilczek.slf4s.Logging
-import impl._
 
 object ErrorKernel {
   sealed trait ApplicationManagementMessage
   case object StartCacheRefresh extends ApplicationManagementMessage
   case object StopCacheRefresh extends ApplicationManagementMessage
+
+  sealed trait ProducerMessage
+  case object GetUpdates extends ProducerMessage
+
+  sealed trait ConsumerMessage
+  case object TakeNextFromQueue extends ConsumerMessage
 
   trait JamieActor extends Actor with Logging {
     override def preStart() { logger.debug("Starting up") }
