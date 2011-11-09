@@ -8,19 +8,15 @@ import akka.actor.{ActorRef, Actor, PoisonPill}
  * Author: Jamie Allen (jallen@chariotsolutions.com)
  */
 object Bootstrap extends Logging {
+  import ErrorKernel._
+  
   def main(args: Array[String]) {
     // Start up
-    val dao = actorOf(new DeltasDao(null))
-    val queue = actorOf(new DeltasQueue(100))
-    val producer = actorOf(new Producer(dao, queue))
-    val consumer = actorOf(new Consumer(queue))
+    val producer = actorOf[Producer]
+    val consumer = actorOf[Consumer]
 
 	  // Execute application
-    val errorKernel = actorOf(new ErrorKernel(null,
-      Map[String, ActorRef]((classOf[DeltasDao].getName -> dao),
-                           (classOf[DeltasQueue].getName -> queue),
-                           (classOf[Producer].getName -> producer),
-                           (classOf[Consumer].getName -> consumer)))).start()
+    val errorKernel = actorOf(new ErrorKernel(null, producer, consumer)).start()
     errorKernel ! StartCacheRefresh
   	Thread.sleep(10000)
   	errorKernel ! StopCacheRefresh
