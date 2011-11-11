@@ -54,7 +54,7 @@ import ErrorKernel._
 class ErrorKernel(val jdbcTemplate: Any, val producer: ActorRef, val consumer: ActorRef) extends JamieActor with Logging {
   self.lifeCycle = Permanent
 
-  private val supervisor: Supervisor = Supervisor(
+  private val supervisor = Supervisor(
     SupervisorConfig(
       AllForOneStrategy(List(classOf[Throwable]), 10, 5000),
       Supervise(producer, Permanent) ::

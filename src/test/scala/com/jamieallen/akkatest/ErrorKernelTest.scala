@@ -1,7 +1,7 @@
 package com.jamieallen.akkatest
 
 import org.scalatest.junit.JUnitSuite
-import org.junit.Test
+import org.junit.{ Test, After }
 
 import java.util.concurrent.TimeUnit
 import org.multiverse.api.latches.StandardLatch
@@ -18,6 +18,11 @@ object ErrorKernelTest {
 class ErrorKernelTest extends JUnitSuite {
   import ErrorKernelTest._
   import ErrorKernel._
+
+  @After
+  def cleanup {
+    Actor.registry.shutdownAll()
+  }
 
   @Test
   def killWorkerShouldRestartMangerAndOtherWorkers = {
@@ -53,7 +58,7 @@ class ErrorKernelTest extends JUnitSuite {
     timingLatch.tryAwait(1, TimeUnit.SECONDS)
 
     errorKernel ! StopCacheRefresh
-    timingLatch.tryAwait(3, TimeUnit.SECONDS)
+    timingLatch.tryAwait(5, TimeUnit.SECONDS)
 
     assert(producer.isShutdown)
     assert(consumer.isShutdown)
